@@ -1,7 +1,7 @@
 class Rtags < Formula
   def llvm_version;  if build.head?; '3.6' else '3.5' end                                      end
   def llvm;          'llvm' + (llvm_version.delete  '.')                                       end
-  def llvm_bin;      Pathname.new("#{HOMEBREW_CELLAR}") + llvm + (llvm_version + '.0') + 'bin' end
+  def llvm_bin;      Pathname.new("#{HOMEBREW_CELLAR}") + llvm + (llvm_version + build.head? ? '.0': '.1') + 'bin' end
   def llvm_config;   llvm_bin + ('llvm-config-' + llvm_version)                                end
   def clang;         llvm_bin + ('clang-' + llvm_version)                                      end
   def clangxx;       llvm_bin + ('clang++-' + llvm_version)                                    end
@@ -17,13 +17,13 @@ class Rtags < Formula
       url "https://github.com/Andersbakken/rct.git", :revision => "10700c615179f07d4832d459e6453eed736cfaef"
     end
 
-    depends_on "llvm35" => [:recommended, "with-libcxx", "with-clang", "without-assertions", "rtti"]
+    depends_on "llvm" => ["with-clang", "without-assertions", "with-rtti"]
   end
 
   head do
     url "https://github.com/Andersbakken/rtags.git"
 
-    depends_on "llvm36" => [:recommended, "with-libcxx", "with-clang", "without-assertions", "rtti"]
+    depends_on "homebrew/versions/llvm36" => "without-assertions"
   end
 
   depends_on "cmake" => :build
